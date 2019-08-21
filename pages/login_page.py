@@ -18,11 +18,15 @@ class LoginPage(BasePage):
         assert self.is_element_present(
             *LoginPageLocators.LOGIN_FORM), "Form to login is not presented"
 
-    def login(self):
+    def login(self, login, password, certificate):
+        # Логин с сертификатом
         self.browser.find_element(
-            *CommonPatternLocators.get_placeholder_locator(self, "Введите логин")).send_keys("TTestov1")
+            *CommonPatternLocators.get_placeholder_locator(self, "Введите логин")).send_keys(login)
         self.browser.find_element(
-            *CommonPatternLocators.get_placeholder_locator(self, "Введите пароль")).send_keys("1111")
+            *CommonPatternLocators.get_placeholder_locator(self, "Введите пароль")).send_keys(password)
         self.browser.find_element(
             *CommonPatternLocators.get_btn_locator(self, "Войти")).click()
-        self.browser.find_element(*LoginPageLocators.LOGIN_CERTIFICATE).click()
+        self.browser.find_element(
+            *LoginPageLocators.get_login_certificate(self, certificate)).click()
+
+# TODO: Логин без сертификата
