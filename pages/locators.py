@@ -62,5 +62,5 @@ class FlsubjectPageLocators(object):
     FLSUBJECT_ADRESS_FORM_TITLE = (By.XPATH, ".//span[text()='Ввод адреса']")
     FLSUBJECT_ADRESS_FORM_SUBMIT = (
         By.CSS_SELECTOR, "input[value='Сохранить']")
-
+    FLSUBJECT_CERTIFICATE_INFO = (By.CSS_SELECTOR, ".certificate-info")
     # TODO: Описать параметры главной страницы
