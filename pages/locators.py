@@ -23,9 +23,9 @@ class CommonPatternLocators(object):
             By.XPATH, ".//label[text()= '" + str(label_name) + "']/following-sibling::div//input[1]")
         return input_link
 
-    def get_menu_link_locator(self, menu_link):
-        menu_link = (By.XPATH, ".//a[@href='" + str(menu_link) + "']")
-        return menu_link
+    def get_link_locator(self, menu_link):
+        link = (By.XPATH, ".//a[@href='" + str(menu_link) + "']")
+        return link
 
     def get_dropdown_locator_by_aria_owns(self, aria_owns):
         dropdown = (By.CSS_SELECTOR, "span[aria-owns='" + aria_owns + "']")
@@ -38,6 +38,11 @@ class CommonPatternLocators(object):
     def get_element_by_id(self, id):
         element = (By.CSS_SELECTOR, "#" + id)
         return element
+
+    def get_registry_element_locator(self, registry_element):
+        registry_element_locator = (
+            By.XPATH, "//table//b[contains(text(), '" + registry_element + "')]")
+        return registry_element_locator
 
 
 class BasePageLocators(object):
@@ -59,8 +64,14 @@ class RequestPageLocators(object):
 
 class FlsubjectPageLocators(object):
     FLSUBJECT_GRID = (By.CSS_SELECTOR, "#gridFlSubject")
-    FLSUBJECT_ADRESS_FORM_TITLE = (By.XPATH, ".//span[text()='Ввод адреса']")
-    FLSUBJECT_ADRESS_FORM_SUBMIT = (
-        By.CSS_SELECTOR, "input[value='Сохранить']")
     FLSUBJECT_CERTIFICATE_INFO = (By.CSS_SELECTOR, ".certificate-info")
     # TODO: Описать параметры главной страницы
+
+
+class UlsubjectPageLocators(object):
+    ULSUBJECT_GRID = (By.CSS_SELECTOR, "#gridUlSubject")
+
+
+class AddressFormLocators(object):
+    ADDRESS_FORM_TITLE = (By.XPATH, ".//span[text()='Ввод адреса']")
+    ADDRESS_FORM_SUBMIT = (By.CSS_SELECTOR, "input[value='Сохранить']")

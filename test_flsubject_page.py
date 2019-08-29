@@ -8,3 +8,4 @@ def test_create_flsubject(browser):
         browser, browser.current_url)
     page.go_to_flsubject_menu()
     page.create_flsubject()
+# TODO: редактирование ФЛ, выпуск серта, фильтрация реестра

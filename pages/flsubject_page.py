@@ -1,24 +1,23 @@
 from .base_page import BasePage
+from .forms.address_form import AddressForm
 from .locators import CommonPatternLocators
 from .locators import FlsubjectPageLocators
+from data_test.load_csv import load_test_data
 
 ID = ["LastName", "FirstName", "MiddleName", "Snils", "Inn", "BirthDate", "BirthPlace",
       "DocSeries", "DocNumber", "DocIssuerOrgan", "DocIssuerCode", "DocDate", "Phone", "Email"]
 VALUE = ["Автотестов", "Автотест", "Автотестович",
          "00373382118", "526317984689", "01.07.1980", "г. Оренбург", "5316", "571230", "УФМС России по Оренбургской области", "560-001", "15.07.2013", "9292222323", "test@amail.ru"]
-ADDRESS_ID = ["addr1Okato", "addr1Oktmo", "addr1PostalCode", "addr1District", "addr1City",
-              "addr1Locality", "addr1Street", "addr1House", "addr1Building", "addr1Structure", "addr1Apartment"]
-ADDRESS_VALUE = ["45272576000", "45331000", "123456", "Северный",
-                 "Зеленоград", "Менделеево", "Новая", "909", "1", "1", "47"]
+# TODO: сформировать из файла
 ADDRESS_STR = "Республика Бурятия, р-н Северный, г Зеленоград, д Менделеево, ул Новая, д 909, корп 1, с 1, кв 47"
 INPUT_DATA = dict(zip(ID, VALUE))
-ADDRESS = dict(zip(ADDRESS_ID, ADDRESS_VALUE))
 
 
 class FlsubjectPage(BasePage):
     def should_be_flsubject_page(self):
         self.should_be_flsubject_grid()
         self.should_be_flsubject_url()
+        # Заголовок
         # TODO: Проверить все параметры главной страницы
 
     def should_be_flsubject_edit_page(self, edit_data):
@@ -47,9 +46,9 @@ class FlsubjectPage(BasePage):
         assert self.is_element_present(
             *FlsubjectPageLocators.FLSUBJECT_GRID), "Flsubject grid is not present"
 
-    def should_be_address_form(self):
-        assert self.is_element_present(
-            *FlsubjectPageLocators.FLSUBJECT_ADRESS_FORM_TITLE), "Flsubject adress from is not present"
+    def should_be_registry_element(self, registry_element):
+        assert self.is_element_present(*CommonPatternLocators.get_registry_element_locator(
+            self, registry_element)), "Registry element " + registry_element + " is not present"
 
     def create_flsubject(self):
         self.click_by_id("createFlButton")
@@ -59,19 +58,17 @@ class FlsubjectPage(BasePage):
         self.select_dropdown("SexId_listbox", "Женский")
         # Заполнение формы адреса
         self.click_by_id("link_open_address_modal")
-        self.should_be_address_form()
-        self.click_by_id("addr1btnToggleAddrDetails")
-        for key, value in ADDRESS.items():
-            self.send_key_by_id(key, value)
-        self.click_by_locator(
-            FlsubjectPageLocators.FLSUBJECT_ADRESS_FORM_SUBMIT)
+        address_form = AddressForm(self.browser, self.browser.current_url)
+        address_form.fill_address_form()
         # Сохранение всей формы, бывает проблема, нужно наблюдать
         self.click_by_locator(
             CommonPatternLocators.get_btn_locator(self, "Сохранить"))
         # Проверка успешного сохранения формы
         self.should_be_flsubject_edit_page(INPUT_DATA)
+        self.go_to_flsubject_menu()
+        self.should_be_registry_element(INPUT_DATA.get(
+            "LastName") + " " + INPUT_DATA.get("FirstName") + " " + INPUT_DATA.get("MiddleName"))
 
     def go_to_flsubject_menu(self):
-        self.browser.find_element(
-            *CommonPatternLocators.get_menu_link_locator(self, "/FlSubject")).click()
+        self.click_by_link("/FlSubject")
         self.should_be_flsubject_page()

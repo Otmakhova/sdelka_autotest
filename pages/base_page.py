@@ -67,3 +67,7 @@ class BasePage(object):
     def check_text_by_id(self, id, text):
         assert self.browser.find_element(
             *CommonPatternLocators.get_element_by_id(self, id)).text == text, "Element with ID = " + id + " and text = " + text + " is not present"
+
+    def click_by_link(self, link_name):
+        self.click_by_locator(
+            CommonPatternLocators.get_link_locator(self, link_name))
