@@ -1,4 +1,3 @@
-from pages.login_page import LoginPage
 from pages.flsubject_page import FlsubjectPage
 import pytest
 

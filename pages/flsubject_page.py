@@ -3,14 +3,11 @@ from .forms.address_form import AddressForm
 from .locators import CommonPatternLocators
 from .locators import FlsubjectPageLocators
 from data_test.load_csv import load_test_data
+from selenium.webdriver.support.ui import WebDriverWait
 
-ID = ["LastName", "FirstName", "MiddleName", "Snils", "Inn", "BirthDate", "BirthPlace",
-      "DocSeries", "DocNumber", "DocIssuerOrgan", "DocIssuerCode", "DocDate", "Phone", "Email"]
-VALUE = ["Автотестов", "Автотест", "Автотестович",
-         "00373382118", "526317984689", "01.07.1980", "г. Оренбург", "5316", "571230", "УФМС России по Оренбургской области", "560-001", "15.07.2013", "9292222323", "test@amail.ru"]
-# TODO: сформировать из файла
-ADDRESS_STR = "Республика Бурятия, р-н Северный, г Зеленоград, д Менделеево, ул Новая, д 909, корп 1, с 1, кв 47"
-INPUT_DATA = dict(zip(ID, VALUE))
+
+test_data = load_test_data("flsubject_data.csv")
+INPUT_DATA = dict(zip(test_data["flsubject_id"], test_data["flsubject_value"]))
 
 
 class FlsubjectPage(BasePage):
@@ -36,7 +33,6 @@ class FlsubjectPage(BasePage):
     def should_be_flsubject_edit_form(self, edit_data):
         for key, value in edit_data.items():
             self.check_value_by_id(key, value)
-        self.check_text_by_id("AddressStr", ADDRESS_STR)
 
     def should_be_flsubject_url(self):
         assert "FlSubject" in str(
@@ -46,12 +42,9 @@ class FlsubjectPage(BasePage):
         assert self.is_element_present(
             *FlsubjectPageLocators.FLSUBJECT_GRID), "Flsubject grid is not present"
 
-    def should_be_registry_element(self, registry_element):
-        assert self.is_element_present(*CommonPatternLocators.get_registry_element_locator(
-            self, registry_element)), "Registry element " + registry_element + " is not present"
-
     def create_flsubject(self):
         self.click_by_id("createFlButton")
+        self.check_header_text("h2", "Создание физического лица")
         # Заполнение основной формы
         for key, value in INPUT_DATA.items():
             self.send_key_by_id(key, value)
@@ -65,10 +58,12 @@ class FlsubjectPage(BasePage):
             CommonPatternLocators.get_btn_locator(self, "Сохранить"))
         # Проверка успешного сохранения формы
         self.should_be_flsubject_edit_page(INPUT_DATA)
+        address_form.check_address_form_value()
         self.go_to_flsubject_menu()
         self.should_be_registry_element(INPUT_DATA.get(
             "LastName") + " " + INPUT_DATA.get("FirstName") + " " + INPUT_DATA.get("MiddleName"))
 
+    # Можно заменить на базовый метод
     def go_to_flsubject_menu(self):
         self.click_by_link("/FlSubject")
         self.should_be_flsubject_page()

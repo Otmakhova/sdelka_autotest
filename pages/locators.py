@@ -28,7 +28,7 @@ class CommonPatternLocators(object):
         return link
 
     def get_dropdown_locator_by_aria_owns(self, aria_owns):
-        dropdown = (By.CSS_SELECTOR, "span[aria-owns='" + aria_owns + "']")
+        dropdown = (By.CSS_SELECTOR, "[aria-owns='" + aria_owns + "']")
         return dropdown
 
     def get_dropdown_value_locator_by_li_text(self, text):
@@ -43,6 +43,10 @@ class CommonPatternLocators(object):
         registry_element_locator = (
             By.XPATH, "//table//b[contains(text(), '" + registry_element + "')]")
         return registry_element_locator
+
+    def get_header_locator(self, level):
+        header_locator = (By.CSS_SELECTOR, str(level))
+        return header_locator
 
 
 class BasePageLocators(object):
@@ -70,8 +74,23 @@ class FlsubjectPageLocators(object):
 
 class UlsubjectPageLocators(object):
     ULSUBJECT_GRID = (By.CSS_SELECTOR, "#gridUlSubject")
+    ULSUBJECT_AGENT_GRID = (By.CSS_SELECTOR, "#ulAgentGrid")
 
 
 class AddressFormLocators(object):
     ADDRESS_FORM_TITLE = (By.XPATH, ".//span[text()='Ввод адреса']")
     ADDRESS_FORM_SUBMIT = (By.CSS_SELECTOR, "input[value='Сохранить']")
+    ADDRESS_FORM_UNCOLLAPSE = (
+        By.CSS_SELECTOR, "#addr1btnToggleAddrDetails > i")
+
+
+class ComplexPageLocators(object):
+    COMPLEX_ADDRESS_FORM = (
+        By.CSS_SELECTOR, "a[onclick='openAddressControl()']")
+    COMPLEX_DEVELOPER_DROPDOWN = (
+        By.CSS_SELECTOR, "[aria-controls='DeveloperIdComboBox_listbox']")
+    COMPLEX_DIALOG_SUCCESS = (
+        By.CSS_SELECTOR, "#dialogWin")
+    COMPLEX_GRID = (By.CSS_SELECTOR, "#gridComplex")
+    COMPLEX_REGISTER_FROM_CONFIRMATION = (
+        By.CSS_SELECTOR, ".confirmation a[href='/Complex']")

@@ -1,12 +1,15 @@
-# TODO: сюда вынести заполнение адресного контрола
 # Форма адресного контрола была открыта ранее
 from pages.base_page import BasePage
 from pages.locators import CommonPatternLocators
 from pages.locators import AddressFormLocators
 from data_test.load_csv import load_test_data
 
-test_data = load_test_data()
+
+test_data = load_test_data("address_form.csv")
 ADDRESS = dict(zip(test_data["address_id"], test_data["address_value"]))
+# TODO: Разобраться с регионом
+ADDRESS_STR = "Оренбургская Область, р-н " + ADDRESS.get("addr1District") + ", г " + ADDRESS.get("addr1City") + ", д " + ADDRESS.get("addr1Locality") + ", ул " + ADDRESS.get(
+    "addr1Street") + ", д " + ADDRESS.get("addr1House") + ", корп " + ADDRESS.get("addr1Building") + ", с " + ADDRESS.get("addr1Structure") + ", кв " + ADDRESS.get("addr1Apartment")
 
 
 class AddressForm(BasePage):
@@ -16,7 +19,7 @@ class AddressForm(BasePage):
 
     def fill_address_form(self):
         self.should_be_address_form()
-        self.click_by_id("addr1btnToggleAddrDetails")
+        self.click_by_locator(AddressFormLocators.ADDRESS_FORM_UNCOLLAPSE)
         # пока не работает
         # self.select_dropdown("addr1RegionCode_listbox",
         #           "Республика Башкортостан")
@@ -24,4 +27,5 @@ class AddressForm(BasePage):
             self.send_key_by_id(key, value)
         self.click_by_locator(AddressFormLocators.ADDRESS_FORM_SUBMIT)
 
-    # def check_address_form_value(self):
+    def check_address_form_value(self):
+        self.check_text_by_id("AddressStr", ADDRESS_STR)
