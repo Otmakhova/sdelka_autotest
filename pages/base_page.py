@@ -54,7 +54,8 @@ class BasePage(object):
         element = WebDriverWait(self.browser, 10).until(
             EC.element_to_be_clickable(locator))
         element.click()
-        time.sleep(0.5) # динамическая страница мешает нажимать кнопки, верхний wait не помогает
+        # динамическая страница мешает нажимать кнопки, верхний wait не помогает
+        time.sleep(0.5)
 
     def click_by_id(self, id):
         self.click_by_locator(
@@ -62,8 +63,10 @@ class BasePage(object):
 
     # dropdown не имеют label, элементы спрятаны в span и не отображаются, поэтому нужно искать по aria_owns
     def select_dropdown(self, aria_owns, dropdown_text):
-        dropdown_locator = CommonPatternLocators.get_dropdown_locator_by_aria_owns(self, aria_owns)
-        dropdown_value_locator = CommonPatternLocators.get_dropdown_value_locator_by_li_text(self, dropdown_text)
+        dropdown_locator = CommonPatternLocators.get_dropdown_locator_by_aria_owns(
+            self, aria_owns)
+        dropdown_value_locator = CommonPatternLocators.get_dropdown_value_locator_by_li_text(
+            self, dropdown_text)
         self.click_by_locator(dropdown_locator)
         self.click_by_locator(dropdown_value_locator)
 

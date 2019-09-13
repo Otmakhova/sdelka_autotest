@@ -1,0 +1,23 @@
+{
+    //"python.pythonPath": "C:\\Users\\mi\\AppData\\Local\\Programs\\Python\\Python37-32\\python.exe",
+    "python.testing.pytestArgs": [
+        ".",
+        "-s",
+        "-v",
+        "--tb=line",
+        "--html=Htmlreport.html",
+        "--variables=start_variables.json",
+        "--alluredir=reports"
+    ],
+    // -s вывод print в консоль
+    // -v подробное отображение информации
+    // -m маркировка тестов рядом парамер "smoke", "not smoke", "smoke or regression"
+    "python.testing.pytestEnabled": true,
+    "python.pythonPath": "C:\\Users\\mi\\enviroments\\sdelka_autotest\\Scripts\\python.exe",
+    "python.testing.pytestPath": "C:\\Users\\mi\\enviroments\\sdelka_autotest\\Scripts\\pytest.exe",
+    "python.testing.unittestEnabled": false,
+    "python.testing.nosetestsEnabled": false,
+    "python.formatting.provider": "autopep8",
+    "editor.formatOnSave": true,
+    "python.formatting.autopep8Path": "C:\\Users\\mi\\enviroments\\sdelka_autotest\\Scripts\\autopep8.exe"
+}
