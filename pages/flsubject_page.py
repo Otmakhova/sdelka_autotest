@@ -4,6 +4,7 @@ from .locators import CommonPatternLocators
 from .locators import FlsubjectPageLocators
 from data_test.load_csv import load_test_data
 from selenium.webdriver.support.ui import WebDriverWait
+import allure
 
 
 test_data = load_test_data("flsubject_data.csv")
@@ -42,6 +43,7 @@ class FlsubjectPage(BasePage):
         assert self.is_element_present(
             *FlsubjectPageLocators.FLSUBJECT_GRID), "Flsubject grid is not present"
 
+    @allure.step("Создание ФЛ")
     def create_flsubject(self):
         self.click_by_id("createFlButton")
         self.check_header_text("h2", "Создание физического лица")

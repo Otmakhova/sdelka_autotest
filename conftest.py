@@ -3,25 +3,44 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from pages.login_page import LoginPage
 from pages.request_page import RequestPage
+import subprocess
+import time
+import allure
+from allure_commons.types import AttachmentType
 
 
 @pytest.fixture(scope="function")
-def browser(variables):
+def browser(request, variables):
     global browser
     print("\nstart browser for test..")
     options = Options()
-    options.add_experimental_option('prefs', {'intl.accept_languages': "en"})
-    options.add_extension(
-        './CryptoPro-Extension-for-CAdES-Browser-Plug-in-Chrome-Web-Mağazası_v1.2.7.crx')
+    options.add_extension(variables['cryptoproextension_path'])
     browser = webdriver.Chrome(
-        executable_path='C:/chromedriver/chromedriver.exe', options=options)
+        executable_path=variables['webdriver_path'], options=options)
     browser.maximize_window()
     browser.implicitly_wait(20)
     login_user(variables)
     yield browser
+    if request.node.rep_call.failed:
+        # Make the screen-shot if test failed:
+        try:
+            allure.attach(browser.get_screenshot_as_png(),
+                          name=request.function.__name__,
+                          attachment_type=AttachmentType.PNG)
+        except:
+            print("\nscreenshot failed..")
+            pass  # just ignore
     print("\nquit browser..")
     browser.quit()
     return browser
+
+
+@pytest.hookimpl(hookwrapper=True, tryfirst=True)
+def pytest_runtest_makereport(item, call):
+    outcome = yield
+    rep = outcome.get_result()
+    setattr(item, "rep_" + rep.when, rep)
+    return rep
 
 
 def login_user(variables):
