@@ -14,10 +14,30 @@ INPUT_DATA = dict(zip(test_data["complex_id"], test_data["complex_value"]))
 class ComplexPage(BasePage):
     def should_be_complex_page(self):
         self.should_be_complex_grid()
+        self.should_be_complex_url()
+        self.check_header_text("h3", "Комплексы")
+
+    # TODO: Использовать в тесте на проверку сохраненных данных (Закрыть уведомление)
+    def should_be_complex_edit_page(self, edit_data):
+        self.should_be_complex_edit_url()
+        self.should_be_complex_edit_form(edit_data)
+        self.check_header_text("h2", "Редактирование комплекса")
+
+    def should_be_complex_edit_form(self, edit_data):
+        for key, value in edit_data.items():
+            self.check_value_by_id(key, value)
+
+    def should_be_complex_edit_url(self):
+        assert "Complex/Edit" in str(
+            self.browser.current_url), "'Complex/Edit' is not in current url: " + str(self.browser.current_url)
 
     def should_be_complex_grid(self):
         assert self.is_element_present(
             *ComplexPageLocators.COMPLEX_GRID), "Complex grid is not present"
+
+    def should_be_complex_url(self):
+        assert "Complex" in str(
+            self.browser.current_url), "'Complex' is not in current url"
 
     def create_complex(self):
         self.click_by_id("createComplexButton")
@@ -34,14 +54,15 @@ class ComplexPage(BasePage):
         # Заполнение формы адреса
         self.click_by_locator(ComplexPageLocators.COMPLEX_ADDRESS_FORM)
         address_form = AddressForm(self.browser, self.browser.current_url)
-        # походу тут ошибка, форма не успевает открываться
         address_form.fill_address_form()
         # Сохранение всей формы
         self.click_by_locator(
             CommonPatternLocators.get_btn_locator(self, "Сохранить"))
         self.should_be_dialog_success()
-        self.browser.find_element(
-            *ComplexPageLocators.COMPLEX_REGISTER_FROM_CONFIRMATION).click()
+        self.click_by_locator(
+            CommonPatternLocators.get_btn_locator(self, "Закрыть"))
+        self.should_be_complex_edit_form(INPUT_DATA)
+        self.go_to_complex_menu()
         self.should_be_registry_element(INPUT_DATA.get("ComplexName"))
 
     # Можно заменить на базовый метод

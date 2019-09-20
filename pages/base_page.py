@@ -77,18 +77,28 @@ class BasePage(object):
         assert self.browser.find_element(*element).get_attribute(
             "value") == value, "Element with ID = " + id + " and value = " + value + " is not present"
 
-    def check_text_by_id(self, id, text):
+    def check_text_by_id(self, id, text, parent=None):
         assert self.browser.find_element(
-            *CommonPatternLocators.get_element_by_id(self, id)).text == text, "Element with ID = " + id + " and text = " + text + " is not present"
+            *CommonPatternLocators.get_element_by_id(self, id, parent)).text == text, "Element with ID = " + id + " and text = " + text + " is not present"
 
     def click_by_link(self, link_name):
         self.click_by_locator(
             CommonPatternLocators.get_link_locator(self, link_name))
 
     def check_header_text(self, level, text):
-        assert self.browser.find_element(*CommonPatternLocators.get_header_locator(
-            self, level)).text == text, "Header with level = " + level + " and text = " + text + " is not present"
+        curr_text = self.browser.find_element(
+            *CommonPatternLocators.get_header_locator(self, level)).text
+        assert curr_text == text, "Header with level = " + level + \
+            " and text = " + text + " is not present. Current text: " + curr_text
 
     def should_be_registry_element(self, registry_element):
         assert self.is_element_present(*CommonPatternLocators.get_registry_element_locator(
             self, registry_element)), "Registry element " + registry_element + " is not present"
+
+    def should_be_edit_form(self, edit_data):
+        for key, value in edit_data.items():
+            self.check_value_by_id(key, value)
+
+    def should_be_info_form(self, edit_data, parent=None):
+        for key, text in edit_data.items():
+            self.check_text_by_id(key, text, parent)

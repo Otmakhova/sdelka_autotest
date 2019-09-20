@@ -35,8 +35,11 @@ class CommonPatternLocators(object):
         dropdown_value = (By.XPATH, ".//li[text()='" + text + "']")
         return dropdown_value
 
-    def get_element_by_id(self, id):
-        element = (By.CSS_SELECTOR, "#" + id)
+    def get_element_by_id(self, id, parent=None):
+        if parent is None:
+            element = (By.CSS_SELECTOR, "#" + id)
+        else:
+            element = (By.CSS_SELECTOR, "#" + parent + ' '+ "#" + id)
         return element
 
     def get_registry_element_locator(self, registry_element):
@@ -75,6 +78,12 @@ class FlsubjectPageLocators(object):
 class UlsubjectPageLocators(object):
     ULSUBJECT_GRID = (By.CSS_SELECTOR, "#gridUlSubject")
     ULSUBJECT_AGENT_GRID = (By.CSS_SELECTOR, "#ulAgentGrid")
+    ULSUBJECT_ADD_AGENT_HREF=(By.XPATH, "//a[contains(text(), 'Добавить представителя')]")
+
+    def get_ulsubject_registry_locator_by_name_and_type(self, name, ul_type):
+        registry_element = (
+            By.XPATH, "//tr[td[contains(text(),'" + ul_type + "')] and td/b[contains(text(),'" + name + "')]]/td[1]")
+        return registry_element
 
 
 class AddressFormLocators(object):

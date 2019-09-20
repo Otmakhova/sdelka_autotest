@@ -22,3 +22,9 @@ def test_create_bank_ulsubject(browser):
         browser, browser.current_url)
     page.go_to_ulsubject_menu()
     page.create_ulsubject("Банк")
+
+
+def test_create_ulagent(browser):
+    page = UlsubjectPage(browser, browser.current_url)
+    page.go_to_ulsubject_menu()  # Можно вынести в фикстуру класса?
+    page.create_ulagent("ООО Тестовый Застройщик", "Застройщик")
