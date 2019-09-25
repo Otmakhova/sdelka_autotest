@@ -1,0 +1,65 @@
+{
+    "ul": {
+        "subject": {
+            "Name": "ООО Тестовый ",
+            "RegDate": "26.06.2011",
+            "Inn": "1234567890",
+            "Ogrn": "1234567890987",
+            "Kpp": "123456789",
+            "Phone": "9226230842",
+            "Email": "ur@tmail.ro"
+        },
+        "agent": {
+            "FlSubjectFio": "",
+            "BirthDateStr": "",
+            "Snils": "",
+            "Inn": "",
+            "DocInfo": "",
+            "DocDateStr": "",
+            "DocIssuerOrgan": "",
+            "DocIssuerCode": "",
+            "Phone": "",
+            "Email": "",
+            "Address": ""
+        }
+    },
+    "common_form": {
+        "address": {
+            "addr1Okato": "45272576000",
+            "addr1Oktmo": "45331000",
+            "addr1PostalCode": "123456",
+            "addr1District": "Северный",
+            "addr1City": "Зеленоград",
+            "addr1Locality": "Менделеево",
+            "addr1Street": "Новая",
+            "addr1House": "909",
+            "addr1Building": "1",
+            "addr1Structure": "1",
+            "addr1Apartment": "47"
+        }
+    },
+    "fl": {
+        "subject": {
+            "LastName": "Автотестов",
+            "FirstName": "Автотест",
+            "MiddleName": "Автотестович",
+            "Snils": "00373382118",
+            "Inn": "526317984689",
+            "BirthDate": "15.07.1993",
+            "BirthPlace": "г. Оренбург",
+            "DocSeries": "5316",
+            "DocNumber": "571230",
+            "DocIssuerOrgan": "УФМС России по Оренбургской области",
+            "DocIssuerCode": "560-001",
+            "DocDate": "15.07.2013",
+            "Phone": "9292222323",
+            "Email": "test@amail.ru"
+        }
+    },
+    "complex": {
+        "subject": {
+            "ComplexName": "Автокомплекс",
+            "CadNumZu": "12:12:1234567:123456"
+        }
+    }
+}

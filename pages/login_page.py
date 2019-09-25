@@ -9,12 +9,12 @@ class LoginPage(BasePage):
         self.should_be_login_form()
 
     def should_be_login_url(self):
-        # реализуйте проверку на корректный url адрес
+        # проверка на корректный url адрес
         assert "Logon" in str(
             self.browser.current_url), "'Logon' is not in current url"
 
     def should_be_login_form(self):
-        # реализуйте проверку, что есть форма логина
+        # проверка, что есть форма логина
         assert self.is_element_present(
             *LoginPageLocators.LOGIN_FORM), "Form to login is not presented"
 

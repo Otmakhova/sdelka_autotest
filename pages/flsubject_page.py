@@ -2,13 +2,11 @@ from .base_page import BasePage
 from .forms.address_form import AddressForm
 from .locators import CommonPatternLocators
 from .locators import FlsubjectPageLocators
-from data_test.load_csv import load_test_data
+from data_test.load_test_data import load_test_data_json
 from selenium.webdriver.support.ui import WebDriverWait
 import allure
 
-
-test_data = load_test_data("flsubject_data.csv")
-FLSUBJECT_DATA = dict(zip(test_data["flsubject_id"], test_data["flsubject_value"]))
+FLSUBJECT_DATA = load_test_data_json("fl", "subject")
 
 
 class FlsubjectPage(BasePage):

@@ -6,6 +6,7 @@ from pages.request_page import RequestPage
 import subprocess
 import time
 import allure
+import json
 from allure_commons.types import AttachmentType
 
 
@@ -54,3 +55,31 @@ def login_user(variables):
                variables['certificate'])
     request_page = RequestPage(browser, browser.current_url)
     request_page.should_be_request_page()
+
+
+@pytest.fixture(scope="session", autouse=True)
+def generate_test_data():
+    with open("data_test/test_data.json", 'r', encoding='utf-8') as File:
+        data = json.load(File)
+    # генерация представителя юл на основе данных о фл
+    data["ul"]["agent"]["FlSubjectFio"] = data["fl"]["subject"]["LastName"] + ' ' + \
+        data["fl"]["subject"]["FirstName"] + ' ' + \
+        data["fl"]["subject"]["MiddleName"]
+    data["ul"]["agent"]["BirthDateStr"] = data["fl"]["subject"]["BirthDate"]
+    data["ul"]["agent"]["Snils"] = data["fl"]["subject"]["Snils"]
+    data["ul"]["agent"]["Inn"] = data["fl"]["subject"]["Inn"]
+    data["ul"]["agent"]["DocInfo"] = data["fl"]["subject"]["DocSeries"] + \
+        ' ' + data["fl"]["subject"]["DocNumber"]
+    data["ul"]["agent"]["DocDateStr"] = data["fl"]["subject"]["DocDate"]
+    data["ul"]["agent"]["DocIssuerOrgan"] = data["fl"]["subject"]["DocIssuerOrgan"]
+    data["ul"]["agent"]["DocIssuerCode"] = data["fl"]["subject"]["DocIssuerCode"]
+    data["ul"]["agent"]["Phone"] = '7' + data["fl"]["subject"]["Phone"]
+    data["ul"]["agent"]["Email"] = data["fl"]["subject"]["Email"]
+    # генерация адресной строки, область пока захардкожена
+    data["ul"]["agent"]["Address"] = "Оренбургская Область, р-н " + data["common_form"]["address"]["addr1District"] + ", г " + data["common_form"]["address"]["addr1City"] + ", д " + data["common_form"]["address"]["addr1Locality"] + ", ул " + data["common_form"]["address"]["addr1Street"] + \
+        ", д " + data["common_form"]["address"]["addr1House"] + ", корп " + data["common_form"]["address"]["addr1Building"] + \
+        ", с " + data["common_form"]["address"]["addr1Structure"] + \
+        ", кв " + data["common_form"]["address"]["addr1Apartment"]
+    with open("data_test/generated_test_data.json", "w", encoding='utf-8') as write_file:
+        json.dump(data, write_file, ensure_ascii=False)
+    print("\nTest data generated")

@@ -2,11 +2,9 @@
 from pages.base_page import BasePage
 from pages.locators import CommonPatternLocators
 from pages.locators import AddressFormLocators
-from data_test.load_csv import load_test_data
+from data_test.load_test_data import load_test_data_json
 
-
-test_data = load_test_data("address_form.csv")
-ADDRESS = dict(zip(test_data["address_id"], test_data["address_value"]))
+ADDRESS = load_test_data_json("common_form", "address")
 # TODO: Разобраться с регионом
 ADDRESS_STR = "Оренбургская Область, р-н " + ADDRESS.get("addr1District") + ", г " + ADDRESS.get("addr1City") + ", д " + ADDRESS.get("addr1Locality") + ", ул " + ADDRESS.get(
     "addr1Street") + ", д " + ADDRESS.get("addr1House") + ", корп " + ADDRESS.get("addr1Building") + ", с " + ADDRESS.get("addr1Structure") + ", кв " + ADDRESS.get("addr1Apartment")
