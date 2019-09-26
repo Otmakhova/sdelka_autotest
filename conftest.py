@@ -61,25 +61,37 @@ def login_user(variables):
 def generate_test_data():
     with open("data_test/test_data.json", 'r', encoding='utf-8') as File:
         data = json.load(File)
+
     # генерация представителя юл на основе данных о фл
-    data["ul"]["agent"]["FlSubjectFio"] = data["fl"]["subject"]["LastName"] + ' ' + \
-        data["fl"]["subject"]["FirstName"] + ' ' + \
-        data["fl"]["subject"]["MiddleName"]
-    data["ul"]["agent"]["BirthDateStr"] = data["fl"]["subject"]["BirthDate"]
-    data["ul"]["agent"]["Snils"] = data["fl"]["subject"]["Snils"]
-    data["ul"]["agent"]["Inn"] = data["fl"]["subject"]["Inn"]
-    data["ul"]["agent"]["DocInfo"] = data["fl"]["subject"]["DocSeries"] + \
-        ' ' + data["fl"]["subject"]["DocNumber"]
-    data["ul"]["agent"]["DocDateStr"] = data["fl"]["subject"]["DocDate"]
-    data["ul"]["agent"]["DocIssuerOrgan"] = data["fl"]["subject"]["DocIssuerOrgan"]
-    data["ul"]["agent"]["DocIssuerCode"] = data["fl"]["subject"]["DocIssuerCode"]
-    data["ul"]["agent"]["Phone"] = '7' + data["fl"]["subject"]["Phone"]
-    data["ul"]["agent"]["Email"] = data["fl"]["subject"]["Email"]
-    # генерация адресной строки, область пока захардкожена
-    data["ul"]["agent"]["Address"] = "Оренбургская Область, р-н " + data["common_form"]["address"]["addr1District"] + ", г " + data["common_form"]["address"]["addr1City"] + ", д " + data["common_form"]["address"]["addr1Locality"] + ", ул " + data["common_form"]["address"]["addr1Street"] + \
-        ", д " + data["common_form"]["address"]["addr1House"] + ", корп " + data["common_form"]["address"]["addr1Building"] + \
-        ", с " + data["common_form"]["address"]["addr1Structure"] + \
-        ", кв " + data["common_form"]["address"]["addr1Apartment"]
+    fl_agent_pair = [["agent", "subject_for_ul"], ["agent_developer",
+                                                   "subject_for_developer"], ["agent_bank", "subject_for_bank"]]
+
+    for i in fl_agent_pair:
+        data["ul"][i[0]]["FlSubjectFio"] = data["fl"][i[1]]["LastName"] + ' ' + \
+            data["fl"][i[1]]["FirstName"] + ' ' + \
+            data["fl"][i[1]]["MiddleName"]
+        data["ul"][i[0]]["BirthDateStr"] = data["fl"][i[1]]["BirthDate"]
+        data["ul"][i[0]]["Snils"] = data["fl"][i[1]]["Snils"]
+        data["ul"][i[0]]["Inn"] = data["fl"][i[1]]["Inn"]
+        data["ul"][i[0]]["DocInfo"] = data["fl"][i[1]]["DocSeries"] + \
+            ' ' + data["fl"][i[1]]["DocNumber"]
+        data["ul"][i[0]]["DocDateStr"] = data["fl"][i[1]]["DocDate"]
+        data["ul"][i[0]]["DocIssuerOrgan"] = data["fl"][i[1]]["DocIssuerOrgan"]
+        data["ul"][i[0]]["DocIssuerCode"] = data["fl"][i[1]]["DocIssuerCode"]
+        data["ul"][i[0]]["Phone"] = '7' + data["fl"][i[1]]["Phone"]
+        data["ul"][i[0]]["Email"] = data["fl"][i[1]]["Email"]
+        # генерация адресной строки, область пока захардкожена
+        data["ul"][i[0]]["Address"] = "Оренбургская Область, р-н " + data["common_form"]["address"]["addr1District"] + ", г " + data["common_form"]["address"]["addr1City"] + ", д " + data["common_form"]["address"]["addr1Locality"] + ", ул " + data["common_form"]["address"]["addr1Street"] + \
+            ", д " + data["common_form"]["address"]["addr1House"] + ", корп " + data["common_form"]["address"]["addr1Building"] + \
+            ", с " + data["common_form"]["address"]["addr1Structure"] + \
+            ", кв " + data["common_form"]["address"]["addr1Apartment"]
+
     with open("data_test/generated_test_data.json", "w", encoding='utf-8') as write_file:
         json.dump(data, write_file, ensure_ascii=False)
     print("\nTest data generated")
+
+# обработка юникода в параметрах теста
+
+
+def pytest_make_parametrize_id(config, val):
+    return repr(val)

@@ -39,7 +39,7 @@ class CommonPatternLocators(object):
         if parent is None:
             element = (By.CSS_SELECTOR, "#" + id)
         else:
-            element = (By.CSS_SELECTOR, "#" + parent + ' '+ "#" + id)
+            element = (By.CSS_SELECTOR, "#" + parent + ' ' + "#" + id)
         return element
 
     def get_registry_element_locator(self, registry_element):
@@ -72,13 +72,19 @@ class RequestPageLocators(object):
 class FlsubjectPageLocators(object):
     FLSUBJECT_GRID = (By.CSS_SELECTOR, "#gridFlSubject")
     FLSUBJECT_CERTIFICATE_INFO = (By.CSS_SELECTOR, ".certificate-info")
+
+    def get_flsubject_registry_locator_by_name_and_cert_status(self, name, cert_status):
+        registry_element = (
+            By.XPATH, "//tr[td/b[contains(text(),'" + name + "')] and td[contains(text(),'" + cert_status + "')]]/td[1]")
+        return registry_element
     # TODO: Описать параметры главной страницы
 
 
 class UlsubjectPageLocators(object):
     ULSUBJECT_GRID = (By.CSS_SELECTOR, "#gridUlSubject")
     ULSUBJECT_AGENT_GRID = (By.CSS_SELECTOR, "#ulAgentGrid")
-    ULSUBJECT_ADD_AGENT_HREF=(By.XPATH, "//a[contains(text(), 'Добавить представителя')]")
+    ULSUBJECT_ADD_AGENT_HREF = (
+        By.XPATH, "//a[contains(text(), 'Добавить представителя')]")
 
     def get_ulsubject_registry_locator_by_name_and_type(self, name, ul_type):
         registry_element = (

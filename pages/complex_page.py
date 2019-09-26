@@ -2,11 +2,8 @@ from .base_page import BasePage
 from .forms.address_form import AddressForm
 from .locators import CommonPatternLocators
 from .locators import ComplexPageLocators
-from data_test.load_test_data import load_test_data_json
 from selenium.webdriver.common.action_chains import ActionChains
 import time
-
-COMPLEX_DATA = load_test_data_json("complex", "subject")
 
 
 class ComplexPage(BasePage):
@@ -37,10 +34,10 @@ class ComplexPage(BasePage):
         assert "Complex" in str(
             self.browser.current_url), "'Complex' is not in current url"
 
-    def create_complex(self):
+    def create_complex(self, complex_data):
         self.click_by_id("createComplexButton")
         # Заполнение основной формы
-        for key, value in COMPLEX_DATA.items():
+        for key, value in complex_data.items():
             self.send_key_by_id(key, value)
         # стандартный селект не подходит, потому что нажатие фиксируется не по всему полю, а только по стрелочке
         self.click_by_locator(ComplexPageLocators.COMPLEX_DEVELOPER_DROPDOWN)
@@ -59,9 +56,9 @@ class ComplexPage(BasePage):
         self.should_be_dialog_success()
         self.click_by_locator(
             CommonPatternLocators.get_btn_locator(self, "Закрыть"))
-        self.should_be_complex_edit_form(COMPLEX_DATA)
+        self.should_be_complex_edit_form(complex_data)
         self.go_to_complex_menu()
-        self.should_be_registry_element(COMPLEX_DATA
+        self.should_be_registry_element(complex_data
                                         .get("ComplexName"))
 
     # Можно заменить на базовый метод

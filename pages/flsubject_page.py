@@ -2,11 +2,8 @@ from .base_page import BasePage
 from .forms.address_form import AddressForm
 from .locators import CommonPatternLocators
 from .locators import FlsubjectPageLocators
-from data_test.load_test_data import load_test_data_json
 from selenium.webdriver.support.ui import WebDriverWait
 import allure
-
-FLSUBJECT_DATA = load_test_data_json("fl", "subject")
 
 
 class FlsubjectPage(BasePage):
@@ -38,11 +35,11 @@ class FlsubjectPage(BasePage):
             *FlsubjectPageLocators.FLSUBJECT_GRID), "Flsubject grid is not present"
 
     @allure.step("Создание ФЛ")
-    def create_flsubject(self):
+    def create_flsubject(self, flsubject_data):
         self.click_by_id("createFlButton")
         self.check_header_text("h2", "Создание физического лица")
         # Заполнение основной формы
-        for key, value in FLSUBJECT_DATA.items():
+        for key, value in flsubject_data.items():
             self.send_key_by_id(key, value)
         self.select_dropdown("SexId_listbox", "Женский")
         # Заполнение формы адреса
@@ -53,11 +50,18 @@ class FlsubjectPage(BasePage):
         self.click_by_locator(
             CommonPatternLocators.get_btn_locator(self, "Сохранить"))
         # Проверка успешного сохранения формы
-        self.should_be_flsubject_edit_page(FLSUBJECT_DATA)
+        self.should_be_flsubject_edit_page(flsubject_data)
         address_form.check_address_form_value()
         self.go_to_flsubject_menu()
-        self.should_be_registry_element(FLSUBJECT_DATA.get(
-            "LastName") + " " + FLSUBJECT_DATA.get("FirstName") + " " + FLSUBJECT_DATA.get("MiddleName"))
+        self.should_be_registry_element(flsubject_data.get(
+            "LastName") + " " + flsubject_data.get("FirstName") + " " + flsubject_data.get("MiddleName"))
+
+    def get_certificate(self, flsubject_data):
+        self.click_by_locator(FlsubjectPageLocators.get_flsubject_registry_locator_by_name_and_cert_status(self, flsubject_data.get(
+            "LastName") + " " + flsubject_data.get("FirstName") + " " + flsubject_data.get("MiddleName"), "Сертификат не выпускался"))
+        self.should_be_flsubject_edit_page(flsubject_data)
+        self.should_be_flsubject_certificate_form()
+        # TODO: новая форма сертификата (как адрес)
 
     def go_to_flsubject_menu(self):
         self.click_by_link("/FlSubject")
