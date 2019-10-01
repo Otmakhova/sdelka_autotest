@@ -19,7 +19,7 @@ def browser(request, variables):
     browser = webdriver.Chrome(
         executable_path=variables['webdriver_path'], options=options)
     browser.maximize_window()
-    browser.implicitly_wait(20)
+    browser.implicitly_wait(40)
     login_user(variables)
     yield browser
     if request.node.rep_call.failed:

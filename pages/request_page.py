@@ -16,3 +16,5 @@ class RequestPage(BasePage):
     def should_be_request_grid(self):
         assert self.is_element_present(
             *RequestPageLocators.REQUEST_GRID), "Request grid is not present"
+
+    # def create_request(self):

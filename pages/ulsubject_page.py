@@ -3,6 +3,7 @@ from .forms.address_form import AddressForm
 from .flsubject_page import FlsubjectPage
 from .locators import CommonPatternLocators
 from .locators import UlsubjectPageLocators
+from .forms.certificate_form import CertificateForm
 
 
 class UlsubjectPage(BasePage):
@@ -50,6 +51,8 @@ class UlsubjectPage(BasePage):
         self.select_dropdown('FlSubjectId_listbox',  agent)
         self.click_by_id('btn_save_form')
         self.should_be_info_form(ulagent_data, 'agent_fl_subject_info')
+        # TODO: Проверить что в реестре отображается представитель
+        # TODO: Приложить документы полномочия
 
     def create_ulsubject(self, ulsubject_data, ul_type):
         self.click_by_id("createUlButton")
@@ -70,6 +73,19 @@ class UlsubjectPage(BasePage):
         address_form.check_address_form_value()
         self.go_to_ulsubject_menu()
         self.should_be_registry_element(ulsubject_data.get("Name"))
+
+    def get_certificate_for_ulagent(self, ulagent_data, name, ul_type):
+        self.click_by_locator(
+            UlsubjectPageLocators.get_ulsubject_registry_locator_by_name_and_type(self, name, ul_type))
+        self.click_by_locator(UlsubjectPageLocators.get_ulagent_by_fio_and_cert_status_locator(
+            self, ulagent_data.get("FlSubjectFio"), "Сертификат не выпускался"))
+        self.browser.switch_to.window(self.browser.window_handles[1])
+        self.should_be_info_form(ulagent_data, 'agent_fl_subject_info')
+        certificate_form = CertificateForm(
+            self.browser, self.browser.current_url)
+        certificate_form.issue_certificate()
+        certificate_form.update_certificate()
+        certificate_form.upload_documents()
 
     def go_to_ulsubject_menu(self):
         self.click_by_link("/UlSubject")
